@@ -10,7 +10,7 @@ import (
 )
 
 // setup database connection
-func connectDb() *grom.DB {
+func ConnectDb() *gorm.DB {
 	errEnv := godotenv.Load()
 	if errEnv != nil {
 		panic("Failed to load env")
@@ -32,7 +32,7 @@ func connectDb() *grom.DB {
 }
 
 // close connection
-func closeDbConnection(db *gorm.DB) {
+func CloseDbConnection(db *gorm.DB) {
 	dbSQL, err := db.DB()
 	if err != nil {
 		panic("Failed to close connection")
