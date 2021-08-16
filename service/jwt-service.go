@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -55,12 +56,11 @@ func (s *jwtService) GenerateToken(UserID string) string {
 	return t
 }
 
-
-func (j *jwtService) ValidateToken(token string) (*jwt.Token, error){
-	return jwt.Parse(token, func(t *jwt.Token) (interface{}, error)){
-		if _,ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Error("Unexpected signing method%v", t.Header["alg"])
+func (j *jwtService) ValidateToken(token string) (*jwt.Token, error) {
+	return jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method%v", t.Header["alg"])
 		}
-		return []byte(jwt.secretKey), nil
-	}
+		return []byte(j.secretKey), nil
+	})
 }
