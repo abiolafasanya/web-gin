@@ -12,16 +12,17 @@ import (
 type UserRepository interface {
 	InsertUser(user models.User) models.User
 	UpdateUser(user models.User) models.User
-	verifyCredentials(email string, password string) interface{}
+	VerifyCredentials(email string, password string) interface{}
 	IsDuplicateEmail(email string) (tx *gorm.DB)
 	FindByEmail(email string) models.User
-	ProfileUser(email string) models.User
+	ProfileUser(UserID string) models.User
 }
 
 type userConnection struct {
 	connection *gorm.DB
 }
 
+// New User Respository create a new instance of UserRepository
 func NewUserRepository(db *gorm.DB) UserRepository {
 	return &userConnection{
 		connection: db,
@@ -49,12 +50,12 @@ func (db *userConnection) verifyCredentials(email string, password string) inter
 	return nil
 }
 
-func (db *userConnection) IsDuplicateEmail(email string, password string) interface{} {
+func (db *userConnection) IsDuplicateEmail(email string) (tx *gorm.DB) {
 	var user models.User
 	return db.connection.Where("email = ?", email).Take(&user)
 }
 
-func (db *userConnection) FindByEmail(email string, password string) interface{} {
+func (db *userConnection) FindByEmail(email string, password string) models.User {
 	var user models.User
 	db.connection.Where("email = ?", email).Take(&user)
 	return user
