@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"log"
+
 	"github.com/web/models"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
@@ -54,17 +56,17 @@ func (db *userConnection) IsDuplicateEmail(email string, password string) interf
 
 func (db *userConnection) FindByEmail(email string, password string) interface{} {
 	var user models.User
-    db.connection.Where("email = ?", email).Take(&user)
+	db.connection.Where("email = ?", email).Take(&user)
 	return user
 }
 
 func (db *userConnection) ProfileUser(userID string) models.User {
 	var user models.User
-    db.connection.Find(&user, userID)
+	db.connection.Find(&user, userID)
 	return user
 }
 
-func hashAndSalt(pwd []byte) string{
+func hashAndSalt(pwd []byte) string {
 	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
 	if err != nil {
 		log.Println(err)
